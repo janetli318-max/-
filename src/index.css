@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  @apply bg-slate-100 text-slate-800 font-sans;
+}
+
+@layer components {
+  .group-card {
+    @apply border-t-4 border-t-blue-500 rounded-xl bg-white shadow-sm border border-slate-200 p-5;
+  }
+
+  .participant-chip {
+    @apply bg-slate-100 border border-slate-200 px-3 py-1.5 text-sm rounded-md text-slate-700 transition-colors hover:bg-slate-200;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
