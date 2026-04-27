@@ -154,6 +154,30 @@ export default function App() {
     setTimeout(() => setHasCopied(false), 2000);
   };
 
+  const handleExportCSV = () => {
+    if (resultGroups.length === 0) return;
+
+    let csvContent = "\ufeff"; // Add BOM for Excel UTF-8 support
+    csvContent += "組別,成員\n";
+    
+    resultGroups.forEach((group, idx) => {
+      group.forEach(member => {
+        // Escape quotes for CSV
+        const escapedMember = member.replace(/"/g, '""');
+        csvContent += `第 ${idx + 1} 組,"${escapedMember}"\n`;
+      });
+    });
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `group_results_${new Date().getTime()}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="h-screen w-full bg-slate-100 flex flex-col font-sans text-slate-800 overflow-hidden">
       {/* Top Navigation */}
@@ -174,12 +198,12 @@ export default function App() {
             載入範本
           </button>
           <button 
-            onClick={copyToClipboard}
+            onClick={handleExportCSV}
             disabled={resultGroups.length === 0}
-            className="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 border border-slate-200 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            className="px-4 py-2 text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-sm shadow-blue-100"
           >
-            {hasCopied ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
-            匯出結果
+            <Share2 className="w-4 h-4" />
+            匯出結果 (CSV)
           </button>
         </div>
       </nav>
